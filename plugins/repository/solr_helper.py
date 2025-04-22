@@ -4,6 +4,9 @@ from pycsw import wsgi
 from pycsw.core import util
 import dateutil.parser as dparser
 
+def get_solr_connection():
+    return [get_config_parser("login", "username"), get_config_parser("login", "password")]
+
 
 def get_config():
     pycsw_root = wsgi.get_pycsw_root_path(os.environ, os.environ)
@@ -180,6 +183,20 @@ def get_bbox(query, right_hand_envelope=False):
         return False
 
 
+
+def parse_PropertyIsLike():
+    pass
+
+def parse_PropertyIsGreaterThanOrEqualTo():
+    pass
+
+def parse_PropertyIsLessThanOrEqualTo():
+    pass
+
+def parse_BBOX():
+    pass
+
+
 def parse_time_query(constraint, params, and_flag=False):
     # print('#################')
     # print('calling parse_time_query with: \n', constraint, params, and_flag)
@@ -233,7 +250,12 @@ def parse_field_OR_query(constraint, and_flag=False, or_flag=False):
 
 def parse_apiso_query(constraint, params, and_flag=False, or_flag=False):
     # apiso:Type
-    if or_flag:
+    print("#### got the following constraint: ", constraint)
+    print("#### got the following params: ", params)
+    print("#### and_flag: ", and_flag)
+    print("#### or_flag: ", or_flag)
+    if not and_flag and or_flag:
+        print("GOT: not and_flag and or_flag")
         property_name = list(constraint.keys())[0]
         print("property_name: ", property_name)
         qstring = constraint[property_name]["ogc:Literal"]
@@ -241,6 +263,7 @@ def parse_apiso_query(constraint, params, and_flag=False, or_flag=False):
         print("name: ", name)
         print("qstring: ", qstring)
     if not and_flag and not or_flag:
+        print("GOT: not and_flag and not or_flag")
         property_name = list(constraint["_dict"]["ogc:Filter"].keys())[0]
         print("property_name: ", property_name)
         qstring = constraint["_dict"]["ogc:Filter"][property_name]["ogc:Literal"]
@@ -273,29 +296,10 @@ def parse_apiso_query(constraint, params, and_flag=False, or_flag=False):
         print(params)
     return params
 
-def parse_field_query(constraint, params, and_flag=False, or_flag=False):
-    print("#### got the following constraint: ", constraint)
-    if or_flag:
-        property_name = list(constraint.keys())[0]
-        print("property_name: ", property_name)
-        qstring = constraint[property_name]["ogc:Literal"]
-        name = constraint[property_name]["ogc:PropertyName"]
-        print("name: ", name)
-        print("qstring: ", qstring)
-    if not and_flag and not or_flag:
-        property_name = list(constraint["_dict"]["ogc:Filter"].keys())[0]
-        print("property_name: ", property_name)
-        qstring = constraint["_dict"]["ogc:Filter"][property_name]["ogc:Literal"]
-        name = constraint["_dict"]["ogc:Filter"][property_name]["ogc:PropertyName"]
-    if not or_flag and and_flag:
-        property_name = list(constraint["_dict"]["ogc:Filter"]["ogc:And"].keys())[0]
-        print("property_name: ", property_name)
-        qstring = constraint["_dict"]["ogc:Filter"]["ogc:And"][property_name][
-            "ogc:Literal"
-        ]
-        name = constraint["_dict"]["ogc:Filter"]["ogc:And"][property_name][
-            "ogc:PropertyName"
-        ]
+
+def parse_property_is_like(params, qstring, name):
+    print("name: ", name)
+    print("qstring: ", qstring)
     qstring = qstring.replace("%", "*")
     if "title" in name.lower():
         params["fq"].append("title:(%s)" % qstring)
@@ -309,7 +313,7 @@ def parse_field_query(constraint, params, and_flag=False, or_flag=False):
         params["fq"].append(
             "personnel_technical_name:(%s) OR personnel_metadata_author_name:(%s)"
             % (qstring, qstring)
-        )
+            )
     elif "dc:source" in name:
         params["fq"].append("related_url_landing_page:(%s)" % qstring)
     elif "format" in name.lower():
@@ -323,7 +327,147 @@ def parse_field_query(constraint, params, and_flag=False, or_flag=False):
             "use_constraint_identifier:(%s) OR use_constraint_license_text:(%s)"
             % (qstring, qstring)
         )
+
+    elif "type" in name.lower():
+        print(f"got APISO type query with {name} set to {qstring}")
+        if qstring.lower() == "dataset":
+            params["fq"].append("isParent:false")
+        elif qstring.lower() == "series":
+            params["fq"].append("isParent:true")
+ 
+    elif "apiso:ParentIdentifier" in name:
+        params["fq"].append(f'related_dataset:"{qstring}"')
     else:
-        if "apiso:Anytext" in name:
+        if name in ["apiso:Anytext",'csw:AnyText']:
             params["q"] = "full_text:(%s)" % qstring
+    return params
+
+def parse_field_query(constraint, params, and_flag=False, or_flag=False):
+    print("executing: parse_field_query")
+    print("#### got the following constraint: ", constraint)
+    print("#### got the following params: ", params)
+    print("#### and_flag: ", and_flag)
+    print("#### or_flag: ", or_flag)
+    if not and_flag and or_flag:
+        print("GOT: not and_flag and or_flag")
+        property_name = list(constraint.keys())[0]
+        print("property_name: ", property_name)
+        if property_name == 'ogc:PropertyIsLike':
+            qstring = constraint["_dict"]["ogc:Filter"][property_name]["ogc:Literal"]
+            name = constraint["_dict"]["ogc:Filter"][property_name]["ogc:PropertyName"]
+            print("name: ", name)
+            print("qstring: ", qstring)
+            params = parse_property_is_like(params, qstring, name)
+
+    if not and_flag and not or_flag:
+        print("GOT: not and_flag and not or_flag")
+        property_name = list(constraint["_dict"]["ogc:Filter"].keys())[0]
+        print("property_name: ", property_name)
+        if property_name == 'ogc:PropertyIsLike':
+            qstring = constraint["_dict"]["ogc:Filter"][property_name]["ogc:Literal"]
+            name = constraint["_dict"]["ogc:Filter"][property_name]["ogc:PropertyName"]
+            print("name: ", name)
+            print("qstring: ", qstring)
+            params = parse_property_is_like(params, qstring, name)
+        
+    if not or_flag and and_flag:
+        print("GOT: not or_flag and and_flag")
+        for property_name in list(constraint["_dict"]["ogc:Filter"]["ogc:And"].keys()):
+            # property_name = list(constraint["_dict"]["ogc:Filter"]["ogc:And"].keys())[0]
+            print("property_name: ", property_name)
+            if property_name == 'ogc:BBOX':
+                params = parse_bbox_query(constraint, params)
+                print('PARAMS after parse_bbox_query ', params)
+            if property_name == 'ogc:PropertyIsLike':
+                qstring = constraint["_dict"]["ogc:Filter"]["ogc:And"][property_name][
+                    "ogc:Literal"
+                ]
+                name = constraint["_dict"]["ogc:Filter"]["ogc:And"][property_name][
+                    "ogc:PropertyName"
+                ]
+                print("name: ", name)
+                print("qstring: ", qstring)
+                qstring = qstring.replace("%", "*")
+                params = parse_property_is_like(params, qstring, name)
+    return params
+
+def parse_field_query_(constraint, params, and_flag=False, or_flag=False):
+    print("executing: parse_field_query")
+    print("#### got the following constraint: ", constraint)
+    print("#### got the following params: ", params)
+    print("#### and_flag: ", and_flag)
+    print("#### or_flag: ", or_flag)
+    if not and_flag and or_flag:
+        print("GOT: not and_flag and or_flag")
+        property_name = list(constraint.keys())[0]
+        print("property_name: ", property_name)
+        qstring = constraint[property_name]["ogc:Literal"]
+        name = constraint[property_name]["ogc:PropertyName"]
+        print("name: ", name)
+        print("qstring: ", qstring)
+    if not and_flag and not or_flag:
+        print("GOT: not and_flag and not or_flag")
+        property_name = list(constraint["_dict"]["ogc:Filter"].keys())[0]
+        print("property_name: ", property_name)
+        qstring = constraint["_dict"]["ogc:Filter"][property_name]["ogc:Literal"]
+        name = constraint["_dict"]["ogc:Filter"][property_name]["ogc:PropertyName"]
+        print("name: ", name)
+        print("qstring: ", qstring)
+    if not or_flag and and_flag:
+        print("GOT: not or_flag and and_flag")
+        for property_name in list(constraint["_dict"]["ogc:Filter"]["ogc:And"].keys()):
+            # property_name = list(constraint["_dict"]["ogc:Filter"]["ogc:And"].keys())[0]
+            print("property_name: ", property_name)
+            if property_name == 'ogc:BBOX':
+                params = parse_bbox_query(constraint, params)
+                print('PARAMS after parse_bbox_query ', params)
+            if property_name == 'ogc:PropertyIsLike':
+                qstring = constraint["_dict"]["ogc:Filter"]["ogc:And"][property_name][
+                    "ogc:Literal"
+                ]
+                name = constraint["_dict"]["ogc:Filter"]["ogc:And"][property_name][
+                    "ogc:PropertyName"
+                ]
+                print("name: ", name)
+                print("qstring: ", qstring)
+                qstring = qstring.replace("%", "*")
+                if "title" in name.lower():
+                    params["fq"].append("title:(%s)" % qstring)
+                elif "abstract" in name.lower():
+                    params["fq"].append("abstract:(%s)" % qstring)
+                elif "subject" in name.lower():
+                    params["fq"].append("keywords_keyword:(%s)" % qstring)
+                elif "creator" in name.lower():
+                    params["fq"].append("personnel_investigator_name:(%s)" % qstring)
+                elif "contributor" in name.lower():
+                    params["fq"].append(
+                        "personnel_technical_name:(%s) OR personnel_metadata_author_name:(%s)"
+                        % (qstring, qstring)
+                    )
+                elif "dc:source" in name:
+                    params["fq"].append("related_url_landing_page:(%s)" % qstring)
+                elif "format" in name.lower():
+                    params["fq"].append("storage_information_file_format:(%s)" % qstring)
+                elif "language" in name.lower():
+                    params["fq"].append("dataset_language:(%s)" % qstring)
+                elif "publisher" in name.lower():
+                    params["fq"].append("dataset_citation_publisher:(%s)" % qstring)
+                elif "rights" in name.lower():
+                    params["fq"].append(
+                        "use_constraint_identifier:(%s) OR use_constraint_license_text:(%s)"
+                        % (qstring, qstring)
+                    )
+
+                elif "type" in name.lower():
+                    print(f"got APISO type query with {name} set to {qstring}")
+                    if qstring.lower() == "dataset":
+                        params["fq"].append("isParent:false")
+                    elif qstring.lower() == "series":
+                        params["fq"].append("isParent:true")
+ 
+                elif "apiso:ParentIdentifier" in name:
+                    params["fq"].append(f'related_dataset:"{qstring}"')
+                else:
+                    if name in ["apiso:Anytext",'csw:AnyText']:
+                        params["q"] = "full_text:(%s)" % qstring
     return params

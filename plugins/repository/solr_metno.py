@@ -46,9 +46,12 @@ import os
 from http.client import HTTPConnection  # py3
 
 import json
+from pycsw.plugins.repository.solr_query_handler import QueryHandler
 
 LOGGER = logging.getLogger(__name__)
 # HTTPConnection.debuglevel = 1
+
+from requests.auth import HTTPBasicAuth
 
 from pycsw.plugins.repository.solr_helper import (
     get_collection_filter,
@@ -60,6 +63,7 @@ from pycsw.plugins.repository.solr_helper import (
     parse_bbox_query,
     parse_apiso_query,
     get_iso_transformer,
+    get_solr_connection,
 )
 
 # I removed parse_bbox_OR_query by calling it internally via the OR flag in parse_bbox_query
@@ -84,13 +88,18 @@ class SOLRMETNORepository(object):
         self.local_ingest = True
         self.solr_select_url = "%s/select" % self.filter
         self.dbtype = "SOLR"
-
+        
+        self.username, self.password = get_solr_connection()
+        self.authentication = HTTPBasicAuth(self.username, self.password)
         # self.config_obj = get_config()
         self.adc_collection_filter = get_collection_filter()
+        
         # print(self.adc_collection_filter)
 
         # generate core queryables db and obj bindings
         self.queryables = {}
+        
+        self.query_handler = QueryHandler(self.adc_collection_filter)
 
         for tname in self.context.model["typenames"]:
             for qname in self.context.model["typenames"][tname]["queryables"]:
@@ -134,7 +143,8 @@ class SOLRMETNORepository(object):
             params["fq"].append("collection:(%s)" % self.adc_collection_filter)
 
         print(params)
-        response = requests.get(self.solr_select_url, params=params)
+
+        response = requests.get(self.solr_select_url, params=params, auth=self.authentication)
 
         response = response.json()
 
@@ -164,7 +174,8 @@ class SOLRMETNORepository(object):
             params["fq"].append("collection:(%s)" % self.adc_collection_filter)
 
         print(params)
-        response = requests.get("%s/select" % self.filter, params=params).json()
+
+        response = requests.get("%s/select" % self.filter, params=params, auth=self.authentication).json()
 
         counts = response["facet_counts"]["facet_fields"][domain]
 
@@ -195,11 +206,17 @@ class SOLRMETNORepository(object):
         if self.adc_collection_filter != "" or self.adc_collection_filter != None:
             params["fq"].append("collection:(%s)" % self.adc_collection_filter)
 
-        response = requests.get("%s/select" % self.filter, params=params).json()
+        response = requests.get("%s/select" % self.filter, params=params, auth=self.authentication).json()
 
-        timestamp = datetime.strptime(
-            response["response"]["docs"][0]["timestamp"], "%Y-%m-%dT%H:%M:%S.%fZ"
-        )
+        # TODO
+        # check if any record available if none (length <= 0) add time.now
+        #
+        try:
+            timestamp = datetime.strptime(
+                response["response"]["docs"][0]["timestamp"], "%Y-%m-%dT%H:%M:%S.%fZ"
+            )
+        except IndexError:
+            timestamp = datetime.now()
 
         return timestamp.strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -222,121 +239,13 @@ class SOLRMETNORepository(object):
         print(" #####  get_iso_transformer #####", "\n", get_iso_transformer(), "\n", "#####  get_iso_transformer #####")
         # mmd_to_NOiso
         print(json.dumps(constraint, indent=2, default=str))
-
         results = []
 
-        dateformat = "%Y-%m-%dT%H:%M:%SZ"
-        # Default search params
-        params = {
-            "q": "*:*",
-            "q.op": "OR",
-            "start": startposition,
-            "rows": maxrecords,
-            "fq": [],
-        }
-        # Add filter for active records
-        params["fq"].append("metadata_status:%s" % "Active")
-        # Add filter for collection
-        if self.adc_collection_filter != "" or self.adc_collection_filter != None:
-            params["fq"].append("collection:(%s)" % self.adc_collection_filter)
-
-        # Only add query constraint if we have some, else return all records
-        if len(constraint) != 0:
-            # print('parsing constraints')
-            # Do/check for  spatial search
-            params = parse_bbox_query(
-                constraint, params, right_hand_envelope=False, or_flag=False
-            )
-            # Do/check for  text search
-            # here I unify the query string for the text search
-            # both for PropertyIsLike and PropertyIsEqualTo
-            # it will execute the same query
-            qstring = "*:*"
-            anytext_constraint = ["ogc:PropertyIsLike", "ogc:PropertyIsEqualTo"]
-            if any(
-                item in constraint["_dict"]["ogc:Filter"] for item in anytext_constraint
-            ):
-                params = parse_field_query(constraint, params, and_flag=False)
-                # add apiso query filter:
-                params = parse_apiso_query(constraint, params, and_flag=False)
-            if not any(
-                item in constraint["_dict"]["ogc:Filter"] for item in anytext_constraint
-            ):
-                if "ogc:And" not in constraint["_dict"]["ogc:Filter"]:
-                    print(
-                        "############## here comes a query without AnyText and without AND ##############"
-                    )
-
-            print('check 1st OR in ["_dict"]["ogc:Filter"]')
-            if "ogc:Or" in constraint["_dict"]["ogc:Filter"]:
-                print("Got OR")
-                print("OR constraint: ", constraint["_dict"]["ogc:Filter"]["ogc:Or"])
-                # print('WARNING: OR query Not implemented yet')
-                # print('WARNING: shall we return 0 results?')
-                if "ogc:And" in constraint["_dict"]["ogc:Filter"]["ogc:Or"]:
-                    q_query_list = []
-                    for i, v in enumerate(
-                        constraint["_dict"]["ogc:Filter"]["ogc:Or"]["ogc:And"]
-                    ):
-                        # here we could add a query time parser
-                        # to check if the query is a time query
-                        if "ogc:PropertyIsLike" in list(v.keys()):
-                            # here we could check if the propert is equal to instead of just like
-                            print("found PropertyIsLike")
-                            q_query = parse_field_OR_query(v, or_flag=True)
-                        if "ogc:BBOX" in list(v.keys()):
-                            print("found BBOX")
-                            print(v["ogc:BBOX"])
-                            # print(get_bbox(constraint["_dict"]["ogc:Filter"]["ogc:Or"]["ogc:And"][0]['ogc:BBOX']))
-                            
-                            # solr_bbox_query = parse_bbox_OR_query(
-                            #     v, right_hand_envelope=False
-                            # )
-                            # print("v: ", v)
-                            solr_bbox_query = parse_bbox_query(
-                                v, params=None, right_hand_envelope=False, or_flag=True  
-                            )
-                            print("solr_bbox_query_test: ", solr_bbox_query)
-                            
-                            q_query = f'{q_query[:-1]} && _query_:"{solr_bbox_query}")'
-                        q_query_list.append(q_query)
-                    q_query_string = (" OR ").join(q_query_list)
-                    print("q_query_string: ", q_query_string)
-                print(constraint["_dict"]["ogc:Filter"]["ogc:Or"].keys())
-                params["q"] = q_query_string
-
-            print('Check 1st AND in ["_dict"]["ogc:Filter"]')
-            if "ogc:And" in constraint["_dict"]["ogc:Filter"]:
-                print("Got 1st AND")
-                if "ogc:Or" in constraint["_dict"]["ogc:Filter"]["ogc:And"]:
-                    print("Got OR inside 1st And")
-                    print(
-                        "OR constraint: ",
-                        constraint["_dict"]["ogc:Filter"]["ogc:And"]["ogc:Or"],
-                    )
-                    print("WARNING: Or Query in 1st AND Not implemented yet")
-                    print("WARNING: shall we return 0 results?")
-                print("1st AND: parsing query for time constraint")
-                params = parse_time_query(constraint, params, and_flag=True)
-
-                if any(
-                    item in constraint["_dict"]["ogc:Filter"]["ogc:And"]
-                    for item in anytext_constraint
-                ):
-                    print("executing parse_field_query inside 1st AND")
-                    params = parse_field_query(constraint, params, and_flag=True)
-                    params = parse_apiso_query(constraint, params, and_flag=True)
-
-                if "ogc:And" in constraint["_dict"]["ogc:Filter"]["ogc:And"]:
-                    print("Got AND _ AND ")
-                    print(constraint["_dict"]["ogc:Filter"]["ogc:And"])
-
-        print("#########################################################\n")
-        print("#################", params["q"], "###############################")
-        print(json.dumps(params, indent=2, default=str))
-
-        # print(('%s/select' % self.filter, params=params).json())
-        response = requests.get("%s/select" % self.filter, params=params).json()
+        # # print(('%s/select' % self.filter, params=params).json())
+        params = self.query_handler.query(constraint)
+        LOGGER.info("QUERY PARAMETERS: %s", params)
+        print(" easking for the following query params:", params)        
+        response = requests.get("%s/select" % self.filter, params=params, auth=self.authentication).json()
 
         # print("######################  ---  ###################################\n")
         # print('%s/select' % self.filter)
