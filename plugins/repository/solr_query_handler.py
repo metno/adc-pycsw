@@ -163,6 +163,12 @@ def _like_pattern(literal, wildcard, single_char, escape_char, keep_whitespace):
             pattern.append("*")
         elif char == single_char:
             pattern.append("?")
+        elif char in ("*", "?"):
+            # Clients routinely type the SOLR/shell wildcards while declaring
+            # different ones (e.g. singleChar="." with a literal of "S1?_EW*").
+            # Escaping those into literals silently returns nothing, so accept
+            # them as wildcards too; an escapeChar still makes them literal.
+            pattern.append(char)
         else:
             pattern.append(_escape(char, keep_whitespace))
     return "".join(pattern)
@@ -182,18 +188,25 @@ def _axis_order(srs_name):
     """
     Axis order of envelope corners.
 
-    Without srsName, and for EPSG:4326 and CRS84, corners are read as lon/lat
-    (x y), as this plugin always did. The URN and URI forms of EPSG:4326
-    define lat/lon (y x).
+    Corners are always read as lon/lat (x y), as this plugin always did, for
+    every accepted srsName. The URN and URI forms of EPSG:4326 formally define
+    lat/lon, but the clients of this service (OWSLib in particular) send lon/lat
+    with those srsName values, and honouring the formal order transposes their
+    bounding box into a region that matches nothing.
+
+    An unrecognised srsName is read as lon/lat as well, which is what this
+    plugin always did: rejecting the filter would turn a working query into an
+    exception report for a coordinate system we cannot reproject to anyway.
     """
     if not srs_name:
         return "xy"
     srs = srs_name.strip().lower()
-    if srs.endswith("crs84"):
-        return "xy"
-    if re.search(r"(^|[^0-9])4326$", srs):
-        return "yx" if srs.startswith("urn:") or "/def/crs/" in srs else "xy"
-    raise UnsupportedFilterError(f"unsupported srsName: {srs_name}")
+    if not (srs.endswith("crs84") or re.search(r"(^|[^0-9])4326$", srs)):
+        LOGGER.warning(
+            "srsName %s is not supported, reading the envelope as EPSG:4326 lon/lat",
+            srs_name,
+        )
+    return "xy"
 
 
 class QueryHandler:
