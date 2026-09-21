@@ -46,7 +46,7 @@ import os
 from http.client import HTTPConnection  # py3
 
 import json
-from pycsw.plugins.repository.solr_query_handler import QueryHandler
+from pycsw.plugins.repository.solr_query_handler import QueryHandler, base_filters
 
 LOGGER = logging.getLogger(__name__)
 # HTTPConnection.debuglevel = 1
@@ -66,10 +66,15 @@ from pycsw.plugins.repository.solr_helper import (
     get_solr_connection,
 )
 
-# I removed parse_bbox_OR_query by calling it internally via the OR flag in parse_bbox_query
-# and I should do the same for parse_field_OR_query
-# I should also remove parse_bbox_OR_query from solr_helper.py
-# and do the same for parse_field_OR_query
+# (connect, read) timeouts in seconds; the read timeout stays below the
+# default gunicorn worker timeout (30s) so SOLR errors are reported, not killed
+SOLR_TIMEOUT = (5, 25)
+
+
+def _first(value):
+    """First value of a multi-valued SOLR field, or the value of a single-valued one"""
+    return value[0] if isinstance(value, list) else value
+
 
 class SOLRMETNORepository(object):
     """
@@ -80,7 +85,6 @@ class SOLRMETNORepository(object):
         """
         Initialize repository
         """
-        # print('SOLRMETNORepository __init__')
         self.context = context
         self.filter = repo_filter
         self.fts = False
@@ -88,17 +92,18 @@ class SOLRMETNORepository(object):
         self.local_ingest = True
         self.solr_select_url = "%s/select" % self.filter
         self.dbtype = "SOLR"
-        
+
         self.username, self.password = get_solr_connection()
         self.authentication = HTTPBasicAuth(self.username, self.password)
-        # self.config_obj = get_config()
         self.adc_collection_filter = get_collection_filter()
-        
-        # print(self.adc_collection_filter)
+
+        # XSLT used to transform MMD records to ISO, compiled on first use
+        self.iso_transformer_file = get_iso_transformer()
+        self._iso_transform = None
 
         # generate core queryables db and obj bindings
         self.queryables = {}
-        
+
         self.query_handler = QueryHandler(self.adc_collection_filter)
 
         for tname in self.context.model["typenames"]:
@@ -117,47 +122,59 @@ class SOLRMETNORepository(object):
             self.queryables["_all"].update(self.queryables[qbl])
         self.queryables["_all"].update(self.context.md_core_model["mappings"])
 
-        # self.dataset = type('dataset', (object,), {})
-
     def dataset(self, record):
         """
         Stub to mock a pycsw dataset object for Transactions
         """
-        # print('dataset stub')
         return type("dataset", (object,), record)
+
+    def _select(self, params):
+        """
+        Run a SOLR select request and return the decoded JSON response
+        """
+        response = requests.get(
+            self.solr_select_url,
+            params=params,
+            auth=self.authentication,
+            timeout=SOLR_TIMEOUT,
+        )
+        try:
+            body = response.json()
+        except ValueError:
+            body = {}
+        if not response.ok or "response" not in body:
+            message = body.get("error", {}).get("msg") or response.text[:500]
+            LOGGER.error("SOLR request failed (HTTP %s): %s", response.status_code, message)
+            raise RuntimeError(
+                "SOLR request failed (HTTP %s): %s" % (response.status_code, message)
+            )
+        return body
 
     def query_ids(self, ids):
         """
         Query by list of identifiers
         """
+        if not ids:
+            return []
 
-        results = []
-
+        quoted_ids = [
+            '"%s"' % i.replace("\\", "\\\\").replace('"', '\\"') for i in ids
+        ]
         params = {
-            "fq": ['metadata_identifier:("%s")' % '" OR "'.join(ids)],
-            "q.op": "OR",
+            "fq": base_filters(self.adc_collection_filter)
+            + ["metadata_identifier:(%s)" % " OR ".join(quoted_ids)],
             "q": "*:*",
+            "rows": len(ids),
         }
-        params["fq"].append("metadata_status:%s" % "Active")
-        if self.adc_collection_filter != "" or self.adc_collection_filter != None:
-            params["fq"].append("collection:(%s)" % self.adc_collection_filter)
+        LOGGER.debug("query_ids params: %s", params)
 
-        print(params)
-
-        response = requests.get(self.solr_select_url, params=params, auth=self.authentication)
-
-        response = response.json()
-
-        for doc in response["response"]["docs"]:
-            results.append(self._doc2record(doc))
-        # print("query by ID \n")
-        return results
+        response = self._select(params)
+        return [self._doc2record(doc) for doc in response["response"]["docs"]]
 
     def query_domain(self, domain, typenames, domainquerytype="list", count=False):
         """
         Query by property domain values
         """
-        # print('Query domain')
         results = []
 
         params = {
@@ -167,15 +184,11 @@ class SOLRMETNORepository(object):
             "facet.query": "distinct",
             "facet.type": "terms",
             "facet.field": domain,
-            "fq": [],
+            "fq": base_filters(self.adc_collection_filter),
         }
-        params["fq"].append("metadata_status:%s" % "Active")
-        if self.adc_collection_filter != "" or self.adc_collection_filter != None:
-            params["fq"].append("collection:(%s)" % self.adc_collection_filter)
+        LOGGER.debug("query_domain params: %s", params)
 
-        print(params)
-
-        response = requests.get("%s/select" % self.filter, params=params, auth=self.authentication).json()
+        response = self._select(params)
 
         counts = response["facet_counts"]["facet_fields"][domain]
 
@@ -189,7 +202,6 @@ class SOLRMETNORepository(object):
         """
         Query to get latest (default) or earliest update to repository
         """
-        # print('query_insert')
         if direction == "min":
             sort_order = "asc"
         else:
@@ -197,26 +209,17 @@ class SOLRMETNORepository(object):
 
         params = {
             "q": "*:*",
-            "q.op": "OR",
             "fl": "timestamp",
+            "rows": 1,
             "sort": "timestamp %s" % sort_order,
-            "fq": [],
+            "fq": base_filters(self.adc_collection_filter),
         }
-        params["fq"].append("metadata_status:%s" % "Active")
-        if self.adc_collection_filter != "" or self.adc_collection_filter != None:
-            params["fq"].append("collection:(%s)" % self.adc_collection_filter)
 
-        response = requests.get("%s/select" % self.filter, params=params, auth=self.authentication).json()
-
-        # TODO
-        # check if any record available if none (length <= 0) add time.now
-        #
-        try:
-            timestamp = datetime.strptime(
-                response["response"]["docs"][0]["timestamp"], "%Y-%m-%dT%H:%M:%S.%fZ"
-            )
-        except IndexError:
-            timestamp = datetime.now()
+        docs = self._select(params)["response"]["docs"]
+        if docs and "timestamp" in docs[0]:
+            timestamp = dparser.parse(_first(docs[0]["timestamp"]))
+        else:
+            timestamp = datetime.now(timezone.utc)
 
         return timestamp.strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -224,7 +227,6 @@ class SOLRMETNORepository(object):
         """
         Query by source
         """
-        # print('Query_source')
         return NotImplementedError()
 
     def query(
@@ -233,38 +235,24 @@ class SOLRMETNORepository(object):
         """
         Query records from underlying repository
         """
-        # DEBUG:
-        # if "_dict" in constraint:
-        #     print("constraint: ", constraint['_dict'])
-        print(" #####  get_iso_transformer #####", "\n", get_iso_transformer(), "\n", "#####  get_iso_transformer #####")
-        # mmd_to_NOiso
-        print(json.dumps(constraint, indent=2, default=str))
-        results = []
-
-        # # print(('%s/select' % self.filter, params=params).json())
-        params = self.query_handler.query(constraint)
+        params = self.query_handler.query(constraint, sortby=sortby)
+        params["rows"] = maxrecords
+        params["start"] = startposition
         LOGGER.info("QUERY PARAMETERS: %s", params)
-        print(" easking for the following query params:", params)        
-        response = requests.get("%s/select" % self.filter, params=params, auth=self.authentication).json()
 
-        # print("######################  ---  ###################################\n")
-        # print('%s/select' % self.filter)
-        # print(params)
-        # print(response)
-        # print(len(response['response']['docs']))
-        # for i in response['response']['docs']:
-        #    print(i['metadata_identifier'])
-        # print("######################  ---  ###################################\n")
+        response = self._select(params)
 
         total = response["response"]["numFound"]
-        # response = response.json()
-        print("Found: %s" % total)
-        for doc in response["response"]["docs"]:
-            results.append(self._doc2record(doc))
-            # print(doc['metadata_identifier'])
-        # print(total)
+        LOGGER.debug("Found: %s", total)
+        results = [self._doc2record(doc) for doc in response["response"]["docs"]]
 
         return str(total), results
+
+    def _transform_to_iso(self, doc_):
+        if self._iso_transform is None:
+            self._iso_transform = etree.XSLT(etree.parse(self.iso_transformer_file))
+        pl = '/usr/local/share/parent_list.xml'
+        return self._iso_transform(doc_, path_to_parent_list=etree.XSLT.strparam(pl)).getroot()
 
     def _doc2record(self, doc):
         """
@@ -282,38 +270,44 @@ class SOLRMETNORepository(object):
         else:
             record["type"] = "dataset"
         #
-        if 'isChild' in doc and doc["isChild"]:
-            record["parentidentifier"] = doc["related_dataset"][0]    
-            # print(doc.keys())        
-        # record["type"] = "dataset"
-        record["wkt_geometry"] = doc["bbox"]
-        record["title"] = doc["title"][0]
-        record["abstract"] = doc["abstract"][0]
+        if 'isChild' in doc and doc["isChild"] and doc.get("related_dataset"):
+            record["parentidentifier"] = doc["related_dataset"][0]
+        if "bbox" in doc:
+            record["wkt_geometry"] = doc["bbox"]
+        record["title"] = _first(doc.get("title", ""))
+        record["abstract"] = _first(doc.get("abstract", ""))
         if "iso_topic_category" in doc:
             record["topicategory"] = ",".join(doc["iso_topic_category"])
         if "keywords_keyword" in doc:
             record["keywords"] = ",".join(doc["keywords_keyword"])
         # record['source'] = doc['related_url_landing_page'][0]
-        if "related_url_landing_page" in doc:
+        if "data_access_url_opendap" in doc:
+            record["source"] = doc["data_access_url_opendap"][0]
+        elif "data_access_url_http" in doc:
+            record["source"] = doc["data_access_url_http"][0]
+        elif "related_url_landing_page" in doc:
             record["source"] = doc["related_url_landing_page"][0]
+
         if "dataset_language" in doc:
             record["language"] = doc["dataset_language"]
 
         # Transform the indexed time as insert_data
-        insert = dparser.parse(doc["timestamp"][0])
-        record["insert_date"] = insert.isoformat()
+        if "timestamp" in doc:
+            insert = dparser.parse(_first(doc["timestamp"]))
+            record["insert_date"] = insert.isoformat()
 
-        # Transform the last metadata update datetime as modified
-        if "last_metadata_update_datetime" in doc:
-            modified = dparser.parse(doc["last_metadata_update_datetime"][0])
+        # Transform the latest metadata update datetime as modified
+        if doc.get("last_metadata_update_datetime"):
+            updates = doc["last_metadata_update_datetime"]
+            modified = max(dparser.parse(u) for u in (updates if isinstance(updates, list) else [updates]))
             record["date_modified"] = modified.isoformat()
 
         # Transform temporal extendt start and end dates
         if "temporal_extent_start_date" in doc:
-            time_begin = dparser.parse(doc["temporal_extent_start_date"][0])
+            time_begin = dparser.parse(_first(doc["temporal_extent_start_date"]))
             record["time_begin"] = time_begin.isoformat()
         if "temporal_extent_end_date" in doc:
-            time_end = dparser.parse(doc["temporal_extent_end_date"][0])
+            time_end = dparser.parse(_first(doc["temporal_extent_end_date"]))
             record["time_end"] = time_end.isoformat()
 
         links = []
@@ -357,14 +351,9 @@ class SOLRMETNORepository(object):
 
         # Transform the first investigator as creator.
         if "personnel_investigator_name" in doc:
-            # record['creator'] = doc['personnel_investigator_name'][0] +" (" + doc['personnel_investigator_email'][0] + "), " + doc['personnel_investigator_organisation'][0]
-            record["creator"] = ",".join(
-                doc["personnel_investigator_name"]
-            )  # +" (" + doc['personnel_investigator_email'][0] + "), " + doc['personnel_investigator_organisation'][0]
+            record["creator"] = ",".join(doc["personnel_investigator_name"])
 
         if "personnel_technical_name" in doc:
-            # for i in doc['personnel_technical_name']:
-            # record['contributor'] = doc['personnel_technical_name'][i]
             record["contributor"] = ",".join(doc["personnel_technical_name"])
 
         if "personnel_metadata_author_name" in doc:
@@ -393,30 +382,17 @@ class SOLRMETNORepository(object):
         if "storage_information_file_format" in doc:
             record["format"] = doc["storage_information_file_format"]
 
-        # xslt = os.environ.get('MMD_TO_ISO')
-        xslt_file = get_iso_transformer()
-        # xslt_file = get_config_parser("xslt", "mmd_to_iso")
-
-        transform = etree.XSLT(etree.parse(xslt_file))
         xml_ = base64.b64decode(doc["mmd_xml_file"])
-        # print("xml_: ", xml_)
-
         doc_ = etree.fromstring(xml_, self.context.parser)
-        # print("doc_:", doc_)
-        pl = '/usr/local/share/parent_list.xml'
-        result_tree = transform(doc_, path_to_parent_list=etree.XSLT.strparam(pl)).getroot()
-        # result_tree = transform(doc_).getroot()
-        record["xml"] = etree.tostring(result_tree)
+        record["xml"] = etree.tostring(self._transform_to_iso(doc_))
         record["mmd_xml_file"] = doc["mmd_xml_file"]
 
-        # print(record['xml'])
         params = {
-            #'fq': doc['metadata_identifier'],
             "q.op": "OR",
             "q": "metadata_identifier:(%s)" % doc["metadata_identifier"],
         }
 
-        mdsource_url = self.solr_select_url + urlencode(params)
+        mdsource_url = self.solr_select_url + "?" + urlencode(params)
         record["mdsource"] = mdsource_url
 
         return self.dataset(record)
