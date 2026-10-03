@@ -1,0 +1,64 @@
+# Traefik reverse proxy for the pycsw stacks (docker swarm).
+#
+# Deployed by host_setup.sh as the `traefik` stack. It provides what the
+# generated stack files rely on:
+#   - the `http` (:80) and `https` (:443) entrypoints
+#   - the `le` Let's Encrypt certificate resolver (TLS challenge, so port 443
+#     must be reachable from the internet and the service domains must resolve
+#     to this host)
+#   - the `https-redirect` middleware
+#   - discovery of services labelled traefik.constraint-label=traefik-public
+#     on the external `traefik-public` overlay network
+#
+# The dashboard / API is not exposed.
+
+version: '3.8'
+
+services:
+  traefik:
+    image: traefik:${TRAEFIK_TAG:-v3.6}
+    command:
+      - --providers.swarm.endpoint=unix:///var/run/docker.sock
+      - --providers.swarm.exposedbydefault=false
+      - --providers.swarm.network=traefik-public
+      - --providers.swarm.constraints=Label(`traefik.constraint-label`, `traefik-public`)
+      - --entrypoints.http.address=:80
+      - --entrypoints.https.address=:443
+      - --certificatesresolvers.le.acme.email=${ACME_EMAIL?Variable not set}
+      - --certificatesresolvers.le.acme.storage=/certificates/acme.json
+      - --certificatesresolvers.le.acme.tlschallenge=true
+      - --accesslog=true
+      - --log.level=INFO
+    ports:
+      - target: 80
+        published: 80
+        mode: host
+      - target: 443
+        published: 443
+        mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Certificates survive redeploys; never delete this volume casually,
+      # Let's Encrypt rate-limits re-issuing.
+      - traefik-public-certificates:/certificates
+    networks:
+      - traefik-public
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - traefik.enable=true
+        - traefik.swarm.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+        - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+        # The swarm provider requires a port on every enabled service.
+        - traefik.http.services.traefik-public.loadbalancer.server.port=8080
+
+volumes:
+  traefik-public-certificates:
+
+networks:
+  traefik-public:
+    external: true

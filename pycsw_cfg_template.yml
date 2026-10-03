@@ -1,0 +1,172 @@
+# =================================================================
+#
+# Authors: Tom Kralidis <tomkralidis@gmail.com>
+#          Angelos Tzotsos <tzotsos@gmail.com>
+#
+# Copyright (c) 2024 Tom Kralidis
+# Copyright (c) 2024 Angelos Tzotsos
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+# =================================================================
+
+server:
+    #url: https://${NGROK_DOMAIN}
+    url: http://localhost:8000/
+    mimetype: application/xml; charset=UTF-8
+    encoding: UTF-8
+    language: en-US
+    maxrecords: 25
+    #ogc_schemas_location: http://foo
+    pretty_print: true
+    gzip_compresslevel: 9
+    #domainquerytype: range
+    #domaincounts: true
+    #spatial_ranking: true
+    workers: 8
+    timeout: 30
+    # templates:
+      # path: /path/to/Jinja2/templates
+      # static: /path/to/static/folder # css/js/img
+
+logging:
+    level: DEBUG
+    # logfile: /tmp/pycsw.log
+
+profiles:
+    - apiso
+
+federatedcatalogues:
+    - http://catalog.data.gov/csw
+
+manager:
+    transactions: false
+    allowed_ips:
+        - 127.0.0.1
+    csw_harvest_pagesize: 10
+
+metadata:
+    identification:
+        title: pycsw Geospatial Catalogue
+        description: pycsw is an OARec and OGC CSW server implementation written in Python
+        keywords:
+            - catalogue
+            - discovery
+            - metadata
+        keywords_type: theme
+        fees: None
+        accessconstraints: None
+        terms_of_service: https://creativecommons.org/licenses/by/4.0
+        url: https://example.org
+    license:
+        name: CC-BY 4.0 license
+        url: https://creativecommons.org/licenses/by/4.0
+    provider:
+        name: Norwegian Meteorological Institute
+        url: https://met.no
+    contact:
+        name: Lastname, Firstname
+        position: Position Title
+        address: Mailing Address
+        city: City
+        stateorprovince: Administrative Area
+        postalcode: Zip or Postal Code
+        country: Country
+        phone: +xx-xxx-xxx-xxxx
+        fax: +xx-xxx-xxx-xxxx
+        email: you@example.org
+        url: Contact URL
+        hours: Mo-Fr 08:00-17:00
+        instructions: During hours of service. Off on weekends.
+        role: pointOfContact
+    inspire:
+        enabled: true
+        languages_supported:
+            - eng
+        default_language: eng
+        date: YYYY-MM-DD
+        gemet_keywords:
+            - Utility and governmental services
+        conformity_service: notEvaluated
+        contact_name: Norwegian Meteorological Institute
+        contact_email: adc-support@met.no
+        temp_extent:
+            begin: YYYY-MM-DD
+            end: YYYY-MM-DD
+
+
+repository:
+    database: null
+    source: pycsw_solr_metno.solr_metno.SolrMETNORepository
+    filter: https://solr:8983/solr/test
+    # Credentials are expanded by pycsw from the container environment:
+    # username: ${SOLR_USER}
+    # password: ${SOLR_PASS}
+
+    # Set custom user-agent string per service
+    user_agent_string: "PyCSW SolrMETNORepository/4.0"
+
+    # MMD ISO XSLT PATH
+    mmd_to_iso_xslt_path:
+    # Parent list xml path
+    parent_list_path: ''
+
+    adc_collections:
+      - ADC
+      - NBS
+      - GCW
+      - NSDN
+      - SIOS
+      - SIOSCD
+      - ACCESS
+      - SESS2025
+      - DAM
+
+    solr_mappings:
+        identifier: metadata_identifier
+        title: title
+        updated: timestamp
+        dc:title: title
+        abstract: abstract
+        csw:AnyText: full_text
+        ows:BoundingBox: geospatial_bounds3d
+        geometry: geospatial_bounds3d
+        parentidentifier: related_dataset
+        anytext: full_text
+        pycsw:TempExtent_begin: temporal_extent_start_date
+        pycsw:TempExtent_end: temporal_extent_end_date
+        apiso:TempExtent_begin: temporal_extent_start_date
+        apiso:TempExtent_end: temporal_extent_end_date
+        time_begin: temporal_extent_start_date
+        time_end: temporal_extent_end_date
+        activity_type: activity_type
+        platform: platform_long_name
+        instrument: platform_instrument_short_name
+        collection: related_dataset
+        collections: related_dataset
+        type: isChild
+        datetime: temporal_extent_period_dr
+    facets:
+      - activity_type
+      - iso_topic_category
+      - platform_instrument_product_type
+      - platform_sentinel

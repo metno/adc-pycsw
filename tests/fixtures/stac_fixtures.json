@@ -1,0 +1,169 @@
+{
+  "stac_url": "https://test.wps.met.no/stac",
+  "stac_version": "1.0.0",
+  "conforms_to": [
+    "http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core",
+    "http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections",
+    "http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/simple-query",
+    "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core",
+    "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/queryables",
+    "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/queryables-query-parameters",
+    "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/filter",
+    "http://www.opengis.net/spec/ogcapi-features-3/1.0/conf/features-filter",
+    "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete",
+    "http://www.opengis.net/spec/cql2/1.0/conf/cql2-json",
+    "http://www.opengis.net/spec/cql2/1.0/conf/cql2-text",
+    "https://api.stacspec.org/v1.0.0/core",
+    "https://api.stacspec.org/v1.0.0/ogcapi-features",
+    "https://api.stacspec.org/v1.0.0/item-search",
+    "https://api.stacspec.org/v1.0.0/item-search#filter",
+    "https://api.stacspec.org/v1.0.0/item-search#free-text",
+    "https://api.stacspec.org/v1.0.0/item-search#sort",
+    "https://api.stacspec.org/v1.0.0-rc.1/collection-search",
+    "https://api.stacspec.org/v1.0.0-rc.1/collection-search#free-text",
+    "https://api.stacspec.org/v1.0.0/collections/extensions/transaction",
+    "https://api.stacspec.org/v1.0.0/ogcapi-features/extensions/transaction"
+  ],
+  "collections": [
+    {
+      "id": "no.met.adc:1e7f7e14-5753-5dc9-bf51-0626d9af0dce",
+      "title": "Weather station PASVIK - SVANVIK (SN99460)",
+      "bbox": [
+        30.041,
+        69.4552,
+        30.041,
+        69.4552
+      ],
+      "temporal_start": "2009-06-01T00:00:00+00:00",
+      "temporal_end": null,
+      "sample_item_id": "no.met.adc:d96fcb76-4da7-5f48-bcb0-121e7833668f",
+      "item_count": 204
+    },
+    {
+      "id": "no.met.adc:52f45159-a4c5-5ebc-ad1c-65d7e86e66f2",
+      "title": "Weather station BJØRNØYA (SN99710)",
+      "bbox": [
+        18.998,
+        74.5035,
+        18.998,
+        74.5035
+      ],
+      "temporal_start": "2009-08-01T00:00:00+00:00",
+      "temporal_end": null,
+      "sample_item_id": "no.met.adc:92e77b7a-0255-5014-af0f-f1dd7f898ecb",
+      "item_count": 202
+    },
+    {
+      "id": "no.met.adc:dd5e23cc-3305-5c02-bf66-e08583e7dc6e",
+      "title": "Weather station KARL XII-ØYA (SN99935)",
+      "bbox": [
+        25.0048,
+        80.6518,
+        25.0048,
+        80.6518
+      ],
+      "temporal_start": "2005-01-01T00:00:00+00:00",
+      "temporal_end": null,
+      "sample_item_id": "no.met.adc:55ac4bc6-bada-52be-9d16-00292098e903",
+      "item_count": 237
+    },
+    {
+      "id": "no.met.adc:1755f775-9fcd-5f6e-ba7a-683bcd85bcba",
+      "title": "Weather station SVALBARD LUFTHAVN (SN99840)",
+      "bbox": [
+        15.5015,
+        78.2453,
+        15.5015,
+        78.2453
+      ],
+      "temporal_start": "2004-09-01T00:00:00+00:00",
+      "temporal_end": null,
+      "sample_item_id": "no.met.adc:a6513dd3-05ac-5b8f-98b7-c2cc6ddef918",
+      "item_count": 244
+    },
+    {
+      "id": "no.met.adc:d3d2e163-aa3e-591c-9897-6ccd4bfe3bce",
+      "title": "Weather station HORNSUND (SN99754)",
+      "bbox": [
+        15.5353,
+        77.0002,
+        15.5353,
+        77.0002
+      ],
+      "temporal_start": "2009-11-01T00:00:00+00:00",
+      "temporal_end": null,
+      "sample_item_id": "no.met.adc:c494a364-5c98-5019-b379-f1cda3fe591b",
+      "item_count": 199
+    },
+    {
+      "id": "no.met.adc:a749787a-263f-5204-babd-431d771f8aa4",
+      "title": "Weather station AKSELØYA (SN99765)",
+      "bbox": [
+        14.7578,
+        77.6873,
+        14.7578,
+        77.6873
+      ],
+      "temporal_start": "2010-08-01T00:00:00+00:00",
+      "temporal_end": null,
+      "sample_item_id": "no.met.adc:76072b2e-f3ac-519d-934c-81e09809091a",
+      "item_count": 173
+    },
+    {
+      "id": "no.met.adc:62ac93ae-987e-5515-b956-6bf74cda6072",
+      "title": "Weather station KVITØYA (SN99938)",
+      "bbox": [
+        31.4585,
+        80.1035,
+        31.4585,
+        80.1035
+      ],
+      "temporal_start": "2001-06-01T00:00:00+00:00",
+      "temporal_end": null,
+      "sample_item_id": "no.met.adc:561333e4-7e41-5768-9a69-8da44559332d",
+      "item_count": 163
+    },
+    {
+      "id": "no.met.adc:7047eaab-9ace-5a93-b241-a56097c1b8ca",
+      "title": "Weather station EDGEØYA - KAPP HEUGLIN (SN99735)",
+      "bbox": [
+        22.8225,
+        78.2508,
+        22.8225,
+        78.2508
+      ],
+      "temporal_start": "2005-01-01T00:00:00+00:00",
+      "temporal_end": null,
+      "sample_item_id": "no.met.adc:329962c2-2df8-54bc-8001-3f30d97eb634",
+      "item_count": 257
+    },
+    {
+      "id": "no.met.adc:50b954fb-dffc-5194-958f-581f141a8a62",
+      "title": "Weather station PYRAMIDEN (SN99880)",
+      "bbox": [
+        16.3603,
+        78.6557,
+        16.3603,
+        78.6557
+      ],
+      "temporal_start": "2012-11-01T00:00:00+00:00",
+      "temporal_end": null,
+      "sample_item_id": "no.met.adc:918088c6-9f2d-578c-92bc-1ab3d49445f8",
+      "item_count": 133
+    },
+    {
+      "id": "no.met.adc:fe10e5c9-a226-58be-829e-cfe5c3a3fc45",
+      "title": "Weather station NY-ÅLESUND (SN99910)",
+      "bbox": [
+        11.9325,
+        78.9218,
+        11.9325,
+        78.9218
+      ],
+      "temporal_start": "1994-09-01T00:00:00+00:00",
+      "temporal_end": null,
+      "sample_item_id": "no.met.adc:2a17fab7-90fa-528e-8e49-a921f185937f",
+      "item_count": 364
+    }
+  ]
+}

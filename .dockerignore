@@ -1,0 +1,56 @@
+# Secrets — never ship to the daemon, even though .gitignore already excludes them.
+secret.py
+.env
+.env.*
+configurator/csw_endpoints*.yml
+*.pem
+*.key
+
+# Local venvs and Python caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Editor / OS noise
+.vscode/
+.idea/
+.DS_Store
+
+# Local artifacts / generated files (configurator output, test reports, notes)
+artifacts/
+
+# Test + debug artifacts
+.pytest_cache/
+.cache/
+pytest_report.html
+*.html
+*.log
+crash_*.txt
+
+# Notebooks (keep image lean)
+*.ipynb
+.ipynb_checkpoints/
+
+# Project-specific stale files we don't want inside the image
+test.json
+test2.json
+pycsw.log
+
+# Don't COPY checked-out working trees — the Dockerfile clones them fresh.
+pycsw/
+mmd/
+
+# Git internals
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD config doesn't need to land inside the image
+.github/
+
+# Agent files
+.claude/
+CLAUDE.md

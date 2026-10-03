@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pycsw-solr-metno"
+version = "0.1.0"
+description = "Custom pycsw Solr repository plugin for MET Norway Arctic/Polar metadata catalogues"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Massimo Di Stefano", email = "massimods@met.no" },
+    { name = "Magnar Martinsen", email = "magnarem@met.no" },
+    { name = "Tom Kralidis", email = "tomkralidis@gmail.com" },
+]
+requires-python = ">=3.11"
+
+dependencies = [
+    "requests",
+    "lxml",
+    "python-dateutil",
+    "pygeoif",
+    "pyproj",
+    "geolinks",
+    "shapely",
+    "Flask",
+    "Jinja2",
+    "niquests",
+    "SQLAlchemy<2.0.0",
+    "pycsw @ git+https://github.com/geopython/pycsw@repo-abstract",
+    "pygeofilter[fes] @ https://github.com/geopython/pygeofilter/archive/main.zip",
+]
+
+[project.urls]
+Homepage = "https://github.com/metno/adc-pycsw/tree/pycsw-solr-metno"
+Issues = "https://github.com/metno/adc-pycsw/issues"
+
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-html",
+    "OWSLib",
+]
+dev = ["lxml-stubs"]
+
+[tool.setuptools]
+py-modules = []
+
+[tool.setuptools.packages.find]
+include = ["pycsw_solr_metno*"]
+exclude = ["tests*", "artifacts*", "mmd*", "outputschemas*", "configurator*"]
+
+[tool.setuptools.package-data]
+"configurator" = ["templates/*.j2", "*.yml"]
+
+[tool.pytest.ini_options]
+markers = [
+    "slow: tests that paginate through many CSW results (may take 30s+ per test)",
+]
+addopts = "-v --tb=short -m 'not slow'"
+testpaths = ["tests"]
+cache_dir = "artifacts/.pytest_cache"

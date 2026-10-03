@@ -1,0 +1,66 @@
+# Copy to csw_endpoints.yml (gitignored) and adapt. One entry per service;
+# `name` is the stack name and the directory under artifacts/deploy/.
+#
+# No credentials here: the Solr user/password are read from .env
+# (SOLR_USER / SOLR_PASS, see .env.example).
+
+# Optional: values inherited by every service below (deep-merged).
+_defaults:
+  docker:
+    image: geopython/pycsw
+    image_tag: latest
+
+# Optional: values forced onto every service (they win over the entries
+# below). Typical use: deploying the same definitions on another host.
+# _overrides:
+#   docker:
+#     base_domain: newhost.dns.web    # each service is served at <name>.newhost.dns.web
+#     reservations: false             # small test machine
+#   server:
+#     workers: 2
+#
+# Without DNS / Traefik: every service publishes its own port and is served
+# at http://<host>:<port> (port = base_port + position of the entry in this
+# file, unless the entry sets docker.port). See docs/MACHINE_SETUP_IP_PORT.md.
+# _overrides:
+#   docker:
+#     expose: port
+#     host: 10.20.30.40
+#     base_port: 8001
+
+endpoint-name.dns.web:
+  name: endpoint-name
+  docker:
+    # Optional: domain (default: the key above; ignored when base_domain is set)
+    # Optional: expose: traefik (default) | port, with host / port / base_port
+    # Optional, with their defaults:
+    # collections_limit: 1            # METNO_PYCSW_COLLECTIONS_LIMIT
+    # secure_headers: true            # HSTS / nosniff / frameDeny traefik middleware
+    # reservations: {cpus: '0.5', memory: 1024M}   # or `false` for none
+    # plugin_dir: <repo>/pycsw_solr_metno          # host path hot-patched into the container
+    # outputschemas_dir: /home/pycsw/pycsw/pycsw/plugins/outputschemas
+  server:
+    # Optional: server_url (default: https://<domain>), maxrecords (10), workers, timeout
+    workers: 16
+  metadata:
+    identification_title: CSW Catalogue Interface
+    provider_name: CSW Catalogue Provider
+    provider_url: https://info.endpoint-name.dns.web
+    contact_name: CSW Catalogue Support
+    contact_position: CSW Catalogue Support
+    contact_email: csw-support@endpoint-name.dns.web
+    contact_url: https://contact.endpoint-name.dns.web
+  repository:
+    filter: https://solr.dns.web/solr/core
+    collections: COLLECTION
+    # Optional:
+    # auth: false                     # Solr core needs no credentials
+    # username_env: SOLR_USER         # other .env variable names for this service
+    # password_env: SOLR_PASS
+    # user_agent, mmd_to_iso_xslt_path, parent_list_path
+    # query_mappings / solr_mappings / facets: override the template defaults
+  metadata_inspire:
+    date: 2019-11-11
+    contact_name: CSW-Catalogue Support
+    contact_email: csw-support@endpoint-name.dns.web
+    temp_extent: 2019-10-11/2020-09-10

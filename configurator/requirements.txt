@@ -1,0 +1,3 @@
+# Needed to run configurator/collection_mapping.py
+Jinja2
+PyYAML

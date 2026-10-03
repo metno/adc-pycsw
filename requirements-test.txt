@@ -1,0 +1,18 @@
+shapely
+OWSLib
+requests
+pytest
+pytest-html
+lxml
+
+# Mirror the container so `from pycsw_solr_metno.solr_metno import ...` works
+# locally (solr_metno.py imports pycsw.core.repository, which transitively
+# imports SQLAlchemy). Versions track the running test_pycsw container.
+pycsw @ git+https://github.com/geopython/pycsw@repo-abstract
+SQLAlchemy<2.0.0
+Flask
+Jinja2
+pygeofilter[fes] @ https://github.com/geopython/pygeofilter/archive/main.zip
+pygeoif
+pyproj
+geolinks

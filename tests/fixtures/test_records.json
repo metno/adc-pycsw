@@ -1,0 +1,650 @@
+[
+  {
+    "identifier": "nersc.no-normap-barents1km_asar_wind-barents1km_asar_wind_20110513T180114_20110513T180500",
+    "title": "Barents Sea Surface Winds from ASAR",
+    "collection": "ADC",
+    "bbox": [
+      12.5,
+      67.96,
+      67.5,
+      79.32
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2011-05-13",
+    "time_end": "2011-05-13",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND SPEED/WIND DIRECTION",
+      "EARTH SCIENCE > OCEANS > OCEAN WINDS > SURFACE WINDS",
+      "OCEAN > ARCTIC OCEAN",
+      "GEOGRAPHIC REGION > ARCTIC"
+    ],
+    "anytext_sample": "Barents"
+  },
+  {
+    "identifier": "nersc.no-normap-arctic20km_adt-arctic20km_adt_19941207_19941207",
+    "title": "Arctic Sea Level Absolute Dynamic Topography (ADT)",
+    "collection": "ADC",
+    "bbox": [
+      -180.0,
+      42.0,
+      180.0,
+      90.0
+    ],
+    "bbox_is_point": false,
+    "time_begin": "1994-12-07",
+    "time_end": "1994-12-07",
+    "keywords": [
+      "EARTH SCIENCE > OCEANS > OCEAN CIRCULATION > OCEAN CURRENTS",
+      "OCEAN > ARCTIC OCEAN",
+      "GEOGRAPHIC REGION > ARCTIC"
+    ],
+    "anytext_sample": "Topography"
+  },
+  {
+    "identifier": "doi:10.1594/PANGAEA.270186",
+    "title": "Paleontological investigation on diatoms of ODP Hole 167-1016A",
+    "collection": "ADC",
+    "bbox": [
+      -122.776,
+      34.0403,
+      -121.776,
+      35.0403
+    ],
+    "bbox_is_point": true,
+    "time_begin": "1996-05-20",
+    "time_end": "1996-05-24",
+    "keywords": [],
+    "anytext_sample": "Paleontological"
+  },
+  {
+    "identifier": "nersc.no-normap-norwegian500m_asar_wind_W015N73-norwegian500m_asar_wind_20090803T181917_20090803T182150",
+    "title": "Norwegian Sea Surface Winds from ASAR",
+    "collection": "ADC",
+    "bbox": [
+      1.25,
+      69.68,
+      28.75,
+      76.72
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2009-08-03",
+    "time_end": "2009-08-03",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND SPEED/WIND DIRECTION",
+      "EARTH SCIENCE > OCEANS > OCEAN WINDS > SURFACE WINDS",
+      "OCEAN > ARCTIC OCEAN",
+      "GEOGRAPHIC REGION > ARCTIC"
+    ],
+    "anytext_sample": "Norwegian"
+  },
+  {
+    "identifier": "doi:10.1594/PANGAEA.948138",
+    "title": "Early instrumental air temperature measurements for Roverto - from Bonfioli (1782-1839)",
+    "collection": "ADC",
+    "bbox": [
+      10.55,
+      45.383,
+      11.55,
+      46.383
+    ],
+    "bbox_is_point": true,
+    "time_begin": "1782-02-14",
+    "time_end": "1839-08-27",
+    "keywords": [],
+    "anytext_sample": "Bonfioli"
+  },
+  {
+    "identifier": "36e33ae1-0700-4efe-b501-5e2e75ec4890",
+    "title": "S5P_OFFL_L2__CO_____20220629T133434_20220629T151603_24405_02_020301_20220701T031958",
+    "collection": "NBS",
+    "bbox": [
+      -179.99998,
+      -77.833305,
+      179.99986,
+      89.926735
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2022-06-29",
+    "time_end": "2022-06-29",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC RADIATION > REFLECTANCE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC CHEMISTRY > CARBON AND HYDROCARBON COMPOUNDS > ATMOSPHERIC CARBON MONOXIDE",
+      "Orthoimagery",
+      "Land cover"
+    ],
+    "anytext_sample": "S5P_OFFL_L2__CO_____20220629T133434_20220629T151603_24405_02_020301_20220701T031958"
+  },
+  {
+    "identifier": "fe8cdcce-79fe-4b6f-99a3-5ef102935957",
+    "title": "S5P_OFFL_L2__AER_AI_20221203T091500_20221203T105630_26630_03_020400_20221210T074556",
+    "collection": "NBS",
+    "bbox": [
+      -179.99976,
+      -89.987526,
+      179.99974,
+      82.74516
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2022-12-03",
+    "time_end": "2022-12-03",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC RADIATION > REFLECTANCE",
+      "EARTH SCIENCE > ATMOSPHERE > AEROSOLS",
+      "EARTH SCIENCE > ATMOSPHERE > AEROSOLS > AEROSOL OPTICAL DEPTH/THICKNESS > UV AEROSOL INDEX",
+      "Orthoimagery",
+      "Land cover"
+    ],
+    "anytext_sample": "S5P_OFFL_L2__AER_AI_20221203T091500_20221203T105630_26630_03_020400_20221210T074556"
+  },
+  {
+    "identifier": "56e863f1-99b8-4e06-beb4-ddce3b9c6542",
+    "title": "S5P_OFFL_L2__HCHO___20220607T070104_20220607T084234_24089_02_020300_20220608T230325",
+    "collection": "NBS",
+    "bbox": [
+      -179.88988,
+      -77.62681,
+      179.91232,
+      89.971115
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2022-06-07",
+    "time_end": "2022-06-07",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC RADIATION > REFLECTANCE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC CHEMISTRY > CARBON AND HYDROCARBON COMPOUNDS > FORMALDEHYDE",
+      "Orthoimagery",
+      "Land cover"
+    ],
+    "anytext_sample": "S5P_OFFL_L2__HCHO___20220607T070104_20220607T084234_24089_02_020300_20220608T230325"
+  },
+  {
+    "identifier": "5b694125-2f8b-49d7-ad20-fd960983e687",
+    "title": "S5P_OFFL_L2__HCHO___20220608T165102_20220608T183232_24109_02_020300_20220610T085129",
+    "collection": "NBS",
+    "bbox": [
+      -179.99983,
+      -77.53694,
+      179.99936,
+      89.97288
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2022-06-08",
+    "time_end": "2022-06-08",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC RADIATION > REFLECTANCE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC CHEMISTRY > CARBON AND HYDROCARBON COMPOUNDS > FORMALDEHYDE",
+      "Orthoimagery",
+      "Land cover"
+    ],
+    "anytext_sample": "S5P_OFFL_L2__HCHO___20220608T165102_20220608T183232_24109_02_020300_20220610T085129"
+  },
+  {
+    "identifier": "fca035ad-5c7a-4682-a260-9dc013e1e347",
+    "title": "S5P_RPRO_L2__NO2____20220615T061027_20220615T075157_24202_03_020400_20230202T232734",
+    "collection": "NBS",
+    "bbox": [
+      -179.95596,
+      -77.23536,
+      179.97546,
+      89.975784
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2022-06-15",
+    "time_end": "2022-06-15",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC RADIATION > REFLECTANCE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC CHEMISTRY > NITROGEN COMPOUNDS > NITROGEN DIOXIDE",
+      "Orthoimagery",
+      "Land cover"
+    ],
+    "anytext_sample": "S5P_RPRO_L2__NO2____20220615T061027_20220615T075157_24202_03_020400_20230202T232734"
+  },
+  {
+    "identifier": "no.met.adc:6fd8669e-7a68-52df-b5d5-652644b7bd40",
+    "title": "Permafrost station JANSSONHAUGEN (SN99875)",
+    "collection": "GCW",
+    "bbox": [
+      15.967,
+      77.6793,
+      16.967,
+      78.6793
+    ],
+    "bbox_is_point": true,
+    "time_begin": "2023-08-01",
+    "time_end": "2023-08-31",
+    "keywords": [
+      "EARTH SCIENCE > LAND SURFACE > SOILS > SOIL TEMPERATURE",
+      "depth",
+      "soil_temperature"
+    ],
+    "anytext_sample": "JANSSONHAUGEN"
+  },
+  {
+    "identifier": "GB/NERC/BAS/PDC/01637",
+    "title": "Medium resolution vector polygons of the Antarctic coastline - VERSION 7.5",
+    "collection": "GCW",
+    "bbox": [
+      -180.0,
+      -90.0,
+      180.0,
+      -60.0
+    ],
+    "bbox_is_point": false,
+    "time_begin": "1993-01-01",
+    "time_end": "2022-05-06",
+    "keywords": [
+      "EARTH SCIENCE > LAND SURFACE > TOPOGRAPHY",
+      "EARTH SCIENCE > LAND SURFACE > TOPOGRAPHY > CONTOURS"
+    ],
+    "anytext_sample": "resolution"
+  },
+  {
+    "identifier": "A20241112-002",
+    "title": "Photo at Qaanaaq and Siorapaluk in 2023",
+    "collection": "GCW",
+    "bbox": [
+      -70.630425,
+      77.466299,
+      -69.22471,
+      77.786178
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2023-07-09",
+    "time_end": "2023-07-30",
+    "keywords": [
+      "EARTH SCIENCE > HUMAN DIMENSIONS > HUMAN SETTLEMENTS > COASTAL AREAS",
+      "EARTH SCIENCE > CRYOSPHERE > SEA ICE > ICEBERGS",
+      "EARTH SCIENCE > BIOLOGICAL CLASSIFICATION > ANIMALS/VERTEBRATES > BIRDS",
+      "EARTH SCIENCE > HUMAN DIMENSIONS > SUSTAINABILITY > ENVIRONMENTAL SUSTAINABILITY",
+      "CONTINENT > NORTH AMERICA > GREENLAND"
+    ],
+    "anytext_sample": "Siorapaluk"
+  },
+  {
+    "identifier": "no.met.adc:5e75318d-b0c4-582a-a014-c919a84893ae",
+    "title": "Ice drift in Greenland seas",
+    "collection": "GCW",
+    "bbox": [
+      -74.89701,
+      66.041084,
+      57.840084,
+      87.4639
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2005-06-04",
+    "time_end": "2005-06-05",
+    "keywords": [
+      "EARTH SCIENCE > CRYOSPHERE > SEA ICE > SEA ICE MOTION"
+    ],
+    "anytext_sample": "Greenland"
+  },
+  {
+    "identifier": "no.met.adc:29f9e3b6-3d33-582c-b0e3-3966a8c5f28f",
+    "title": "Permafrost station JUVVASSHØE (SN15270)",
+    "collection": "GCW",
+    "bbox": [
+      7.869,
+      61.1775,
+      8.869,
+      62.1775
+    ],
+    "bbox_is_point": true,
+    "time_begin": "2018-10-01",
+    "time_end": "2018-10-31",
+    "keywords": [
+      "EARTH SCIENCE > LAND SURFACE > SOILS > SOIL TEMPERATURE",
+      "depth",
+      "soil_temperature"
+    ],
+    "anytext_sample": "station"
+  },
+  {
+    "identifier": "doi:10.1594/PANGAEA.260592",
+    "title": "Susceptibility of sediment core PS1532-9",
+    "collection": "NSDN",
+    "bbox": [
+      15.48833,
+      82.30166,
+      16.48833,
+      83.30166
+    ],
+    "bbox_is_point": true,
+    "time_begin": "1987-08-15",
+    "time_end": "1987-08-15",
+    "keywords": [],
+    "anytext_sample": "Susceptibility"
+  },
+  {
+    "identifier": "nersc.no-normap-barents1km_asar_wind-barents1km_asar_wind_20090716T160414_20090716T160503",
+    "title": "Barents Sea Surface Winds from ASAR",
+    "collection": "NSDN",
+    "bbox": [
+      12.5,
+      67.96,
+      67.5,
+      79.32
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2009-07-16",
+    "time_end": "2009-07-16",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND SPEED/WIND DIRECTION",
+      "EARTH SCIENCE > OCEANS > OCEAN WINDS > SURFACE WINDS",
+      "OCEAN > ARCTIC OCEAN",
+      "GEOGRAPHIC REGION > ARCTIC"
+    ],
+    "anytext_sample": "Barents"
+  },
+  {
+    "identifier": "doi:10.1594/PANGAEA.258490",
+    "title": "Moisture and density measured on ODP Hole 141-861C",
+    "collection": "NSDN",
+    "bbox": [
+      -76.1922,
+      -46.35,
+      -75.1922,
+      -45.35
+    ],
+    "bbox_is_point": true,
+    "time_begin": "1991-12-17",
+    "time_end": "1991-12-20",
+    "keywords": [],
+    "anytext_sample": "measured"
+  },
+  {
+    "identifier": "nersc.no-normap-barents1km_asar_wind-barents1km_asar_wind_20100115T183220_20100115T183750",
+    "title": "Barents Sea Surface Winds from ASAR",
+    "collection": "NSDN",
+    "bbox": [
+      12.5,
+      67.96,
+      67.5,
+      79.32
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2010-01-15",
+    "time_end": "2010-01-15",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND SPEED/WIND DIRECTION",
+      "EARTH SCIENCE > OCEANS > OCEAN WINDS > SURFACE WINDS",
+      "OCEAN > ARCTIC OCEAN",
+      "GEOGRAPHIC REGION > ARCTIC"
+    ],
+    "anytext_sample": "Barents"
+  },
+  {
+    "identifier": "doi:10.1594/PANGAEA.428181",
+    "title": "Daily sea level from coastal tide gauge station Honolulu-A in 1936 (Research quality database)",
+    "collection": "NSDN",
+    "bbox": [
+      -158.366,
+      20.806,
+      -157.366,
+      21.806
+    ],
+    "bbox_is_point": true,
+    "time_begin": "1936-01-01",
+    "time_end": "1936-12-31",
+    "keywords": [],
+    "anytext_sample": "Honolulu"
+  },
+  {
+    "identifier": "nersc.no-normap-barents1km_asar_wind-barents1km_asar_wind_20111023T101154_20111023T101445",
+    "title": "Barents Sea Surface Winds from ASAR",
+    "collection": "SIOS",
+    "bbox": [
+      12.5,
+      67.96,
+      67.5,
+      79.32
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2011-10-23",
+    "time_end": "2011-10-23",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND SPEED/WIND DIRECTION",
+      "EARTH SCIENCE > OCEANS > OCEAN WINDS > SURFACE WINDS",
+      "OCEAN > ARCTIC OCEAN",
+      "GEOGRAPHIC REGION > ARCTIC"
+    ],
+    "anytext_sample": "Barents"
+  },
+  {
+    "identifier": "ebccd54c-b9b9-5bf1-89ef-db110eb6071f",
+    "title": "S5P_OFFL_L2__NP_BD6_20220622T104319_20220622T122449_24304_02_010300_20220624T003347",
+    "collection": "SIOS",
+    "bbox": [
+      -180.0,
+      -77.19703,
+      180.0,
+      90.0
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2022-06-22",
+    "time_end": "2022-06-22",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC RADIATION > REFLECTANCE",
+      "Orthoimagery",
+      "Land cover"
+    ],
+    "anytext_sample": "S5P_OFFL_L2__NP_BD6_20220622T104319_20220622T122449_24304_02_010300_20220624T003347"
+  },
+  {
+    "identifier": "nersc.no-normap-norwegian500m_asar_wind_W015N73-norwegian500m_asar_wind_20100712T101931_20100712T102419",
+    "title": "Norwegian Sea Surface Winds from ASAR",
+    "collection": "SIOS",
+    "bbox": [
+      1.25,
+      69.68,
+      28.75,
+      76.72
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2010-07-12",
+    "time_end": "2010-07-12",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND SPEED/WIND DIRECTION",
+      "EARTH SCIENCE > OCEANS > OCEAN WINDS > SURFACE WINDS",
+      "OCEAN > ARCTIC OCEAN",
+      "GEOGRAPHIC REGION > ARCTIC"
+    ],
+    "anytext_sample": "Norwegian"
+  },
+  {
+    "identifier": "no.nersc:647d48f2-dad2-5c2f-8063-83003b83e13e",
+    "title": "dataset-oc-arc-opt-multi_cci-l3-merged_1km_daily-rt",
+    "collection": "SIOS",
+    "bbox": [
+      0.0,
+      74.0,
+      40.0,
+      82.0
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2021-03-07",
+    "time_end": "2021-03-08",
+    "keywords": [],
+    "anytext_sample": "merged"
+  },
+  {
+    "identifier": "nersc.no-normap-norwegian500m_asar_wind_W015N73-norwegian500m_asar_wind_20110629T191858_20110629T192428",
+    "title": "Norwegian Sea Surface Winds from ASAR",
+    "collection": "SIOS",
+    "bbox": [
+      1.25,
+      69.68,
+      28.75,
+      76.72
+    ],
+    "bbox_is_point": false,
+    "time_begin": "2011-06-29",
+    "time_end": "2011-06-29",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND SPEED/WIND DIRECTION",
+      "EARTH SCIENCE > OCEANS > OCEAN WINDS > SURFACE WINDS",
+      "OCEAN > ARCTIC OCEAN",
+      "GEOGRAPHIC REGION > ARCTIC"
+    ],
+    "anytext_sample": "Norwegian"
+  },
+  {
+    "identifier": "no.met.adc:8e7c4b9f-11a2-573e-bfc5-5f6aeb74c9e7",
+    "title": "Permafrost station VERLEGENHUKEN (SN99927)",
+    "collection": "SIOSCD",
+    "bbox": [
+      15.7433,
+      79.5555,
+      16.7433,
+      80.5555
+    ],
+    "bbox_is_point": true,
+    "time_begin": "2020-04-01",
+    "time_end": "2020-04-30",
+    "keywords": [
+      "EARTH SCIENCE > LAND SURFACE > SOILS > SOIL TEMPERATURE",
+      "depth",
+      "soil_temperature"
+    ],
+    "anytext_sample": "VERLEGENHUKEN"
+  },
+  {
+    "identifier": "no.met.adc:62b3c8b6-0b3e-50e9-b79f-8c82a929e25a",
+    "title": "Weather station KONGSØYA (SN99740)",
+    "collection": "SIOSCD",
+    "bbox": [
+      28.334,
+      78.418,
+      29.334,
+      79.418
+    ],
+    "bbox_is_point": true,
+    "time_begin": "2014-10-01",
+    "time_end": "2014-10-31",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC PRESSURE > PRESSURE TENDENCY",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC TEMPERATURE > SURFACE TEMPERATURE > AIR TEMPERATURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC PRESSURE > SEA LEVEL PRESSURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND SPEED",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WATER VAPOR > WATER VAPOR INDICATORS > HUMIDITY > RELATIVE HUMIDITY",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WATER VAPOR > WATER VAPOR INDICATORS > DEW POINT TEMPERATURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC PRESSURE > SURFACE PRESSURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND DIRECTION",
+      "air_temperature",
+      "air_pressure_at_sea_level",
+      "wind_speed",
+      "relative_humidity",
+      "dew_point_temperature",
+      "surface_air_pressure",
+      "wind_from_direction",
+      "Meteorological geographical features",
+      "Atmospheric conditions",
+      "Weather and climate"
+    ],
+    "anytext_sample": "station"
+  },
+  {
+    "identifier": "no.met.adc:3e36d0c3-2340-50cf-87cf-69358998026a",
+    "title": "Weather station PYRAMIDEN (SN99880)",
+    "collection": "SIOSCD",
+    "bbox": [
+      15.8603,
+      78.1557,
+      16.8603,
+      79.1557
+    ],
+    "bbox_is_point": true,
+    "time_begin": "2013-07-01",
+    "time_end": "2013-07-31",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC PRESSURE > SURFACE PRESSURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC PRESSURE > SEA LEVEL PRESSURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC TEMPERATURE > SURFACE TEMPERATURE > AIR TEMPERATURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WATER VAPOR > WATER VAPOR INDICATORS > HUMIDITY > RELATIVE HUMIDITY",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND DIRECTION",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND SPEED",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC PRESSURE > PRESSURE TENDENCY",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WATER VAPOR > WATER VAPOR INDICATORS > DEW POINT TEMPERATURE",
+      "surface_air_pressure",
+      "air_temperature",
+      "relative_humidity",
+      "air_pressure_at_sea_level",
+      "wind_from_direction",
+      "wind_speed",
+      "dew_point_temperature",
+      "Meteorological geographical features",
+      "Atmospheric conditions",
+      "Weather and climate"
+    ],
+    "anytext_sample": "PYRAMIDEN"
+  },
+  {
+    "identifier": "no.met.adc:ea5243bc-b38e-571a-8c79-e36ac86fcb53",
+    "title": "Weather station SØRKAPPØYA (SN99752)",
+    "collection": "SIOSCD",
+    "bbox": [
+      16.0428,
+      75.9733,
+      17.0428,
+      76.9733
+    ],
+    "bbox_is_point": true,
+    "time_begin": "2019-01-01",
+    "time_end": "2019-01-31",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC TEMPERATURE > SURFACE TEMPERATURE > AIR TEMPERATURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND SPEED",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC PRESSURE > SEA LEVEL PRESSURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WATER VAPOR > WATER VAPOR INDICATORS > HUMIDITY > RELATIVE HUMIDITY",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WATER VAPOR > WATER VAPOR INDICATORS > DEW POINT TEMPERATURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC PRESSURE > SURFACE PRESSURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC PRESSURE > PRESSURE TENDENCY",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND DIRECTION",
+      "air_temperature",
+      "wind_speed",
+      "air_pressure_at_sea_level",
+      "relative_humidity",
+      "dew_point_temperature",
+      "surface_air_pressure",
+      "wind_from_direction",
+      "Meteorological geographical features",
+      "Atmospheric conditions",
+      "Weather and climate"
+    ],
+    "anytext_sample": "station"
+  },
+  {
+    "identifier": "no.met.adc:4a374cfa-299e-579e-aa86-e3c047cafbad",
+    "title": "Weather station SØRKAPPØYA (SN99752)",
+    "collection": "SIOSCD",
+    "bbox": [
+      16.0428,
+      75.9733,
+      17.0428,
+      76.9733
+    ],
+    "bbox_is_point": true,
+    "time_begin": "2025-09-01",
+    "time_end": "2025-09-30",
+    "keywords": [
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND DIRECTION",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC PRESSURE > SEA LEVEL PRESSURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC PRESSURE > SURFACE PRESSURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC PRESSURE > PRESSURE TENDENCY",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WATER VAPOR > WATER VAPOR INDICATORS > DEW POINT TEMPERATURE",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WATER VAPOR > WATER VAPOR INDICATORS > HUMIDITY > RELATIVE HUMIDITY",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC WINDS > SURFACE WINDS > WIND SPEED",
+      "EARTH SCIENCE > ATMOSPHERE > ATMOSPHERIC TEMPERATURE > SURFACE TEMPERATURE > AIR TEMPERATURE",
+      "wind_from_direction",
+      "air_pressure_at_sea_level",
+      "surface_air_pressure",
+      "dew_point_temperature",
+      "relative_humidity",
+      "wind_speed",
+      "air_temperature",
+      "Meteorological geographical features",
+      "Atmospheric conditions",
+      "Weather and climate"
+    ],
+    "anytext_sample": "station"
+  }
+]

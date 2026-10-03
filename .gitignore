@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local artifacts and generated files — everything disposable goes here:
+#   artifacts/deploy/<service>/   configurator output (pycsw.yml, stack.yml, pycsw.log)
+#   artifacts/test-reports/       junit / html / log output of test runs
+#   artifacts/notes/              working notes, issue drafts
+#   artifacts/scratchpad/         unused / archived files
+artifacts/
+
+# Secrets
+.env
+.env.*
+!.env.example
+secret.py
+
+# Environment-specific endpoint definitions (input of the configurator)
+configurator/csw_endpoints*.yml
+!configurator/csw_endpoints_sample.yml
+
+# Local checkouts mounted into / cloned by the containers
+pycsw/
+mmd/
+
+# pytest (cache_dir lives under artifacts/, see pytest.ini)
+.pytest_cache/
+.cache/
+*.html
+
+# Crash / debug dumps
+crash_*.txt
+*.log
+
+# Hand-written configs used to live in the repo root with credentials in
+# them; keep ignoring those names so a stray copy can never be committed.
+/cfg*.yml
+
+.claude/
+
+# Python packaging build artifacts
+*.egg-info/
+build/
+dist/
