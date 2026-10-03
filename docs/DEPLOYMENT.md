@@ -49,7 +49,7 @@ cp .env.example .env && chmod 600 .env
 |---|---|---|
 | `SOLR_USER`, `SOLR_PASS` | yes | Solr basic-auth credentials used by every service |
 | `ACME_EMAIL` | yes | Contact address for the Let's Encrypt certificates |
-| `PARENT_LIST_SOLR_URL` | recommended | Solr core listing the parent datasets, e.g. `https://metsis-solr.met.no/solr/adc`. Without it the ISO/DIF output has no parent/child links. |
+| `PARENT_LIST_SOLR_URL` | recommended | Solr core listing the parent datasets. Use the same core as the services' `repository.filter` (normally `https://metsis-solr.met.no/solr/adc2`). Without it the ISO/DIF output has no parent/child links. |
 | `SWARM_ADVERTISE_ADDR` | only with several network interfaces | Address passed to `docker swarm init` |
 
 ## 3. Service definitions: `configurator/csw_endpoints.yml`

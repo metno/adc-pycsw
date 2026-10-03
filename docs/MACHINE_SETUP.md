@@ -228,7 +228,7 @@ nano .env        # or any editor: vi .env, ...
 |---|---|
 | `SOLR_USER`, `SOLR_PASS` | Solr basic auth. Single-quote the password if it has shell special characters. |
 | `ACME_EMAIL` | Let's Encrypt contact (used by `host/traefik.yml`) |
-| `PARENT_LIST_SOLR_URL` | Solr core with the parent datasets, e.g. `https://metsis-solr.met.no/solr/adc` |
+| `PARENT_LIST_SOLR_URL` | Solr core with the parent datasets: the same core as the services' `repository.filter`, normally `https://metsis-solr.met.no/solr/adc2` |
 
 `.env` is gitignored and is the **only** place credentials are written. The
 generated files only reference `${SOLR_USER}` / `${SOLR_PASS}`.
